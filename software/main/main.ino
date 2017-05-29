@@ -3,21 +3,21 @@
  * Original Version by Poldi
  * modified by LukeLER
  * 
- * Event Abfragen:  
- * - Webserver im loop()  
- * - Taster über tasterEvents()  
- * - Zeit über   timeEvents()  
+ * Event Abfragen:
+ * - Webserver im loop()
+ * - Taster über tasterEvents()
+ * - Zeit über   timeEvents()
  * --> setzten von torON & lichtON StatusBits
- * 
- * Auswertung der StatusBits in  
- * - statusUmsetztenTor()   für Tor  
+ *
+ * Auswertung der StatusBits in
+ * - statusUmsetztenTor()   für Tor
  * - statusUmsetztenLicht() für Licht
- * 
- * printDate() --> printet aktuelle Zeit der RTC 
+ *
+ * printDate() --> printet aktuelle Zeit der RTC
  * getDate()   --> Auslesen der Aktuellen Zeit und speichern in Variablen
- * 
- * ###geschrieben und getestet für Arduino Leonardo###
- * 
+ *
+ * ###written and tested for Arduino Leonardo###
+ *
  */
 
 #include <SPI.h>
@@ -37,7 +37,7 @@ byte lastpressed = 0;
 int torSchaltStatus = 0;
 int torStatus = 0;
 int letzteLED = 0;
-  
+
 byte torPort = 4;
 byte lichtPort = 5;
 byte torTasterPort = 6;
@@ -45,7 +45,7 @@ byte lichtTasterPort = 7;
 byte torLEDPort = 9;
 byte lichtLEDPort = 13;
 byte powerLEDPort = 8;
-  
+
 //Events
 int torOffenStunde = 6;
 int torOffenMinute = 0;
@@ -53,7 +53,7 @@ int torOffenSekunde = 10; //verhindert mehrmaliges Schalten pro Minute
 int torZuStunde = 23;
 int torZuMinute = 0;
 int torZuSekunde = 10;
-  
+
 int lichtAnStunde = 6;
 int lichtAnMinute = 0;
 int lichtAusStunde = 23;
@@ -74,7 +74,7 @@ int year;
 void setup(){
 
   //Relais
-  pinMode(torPort, OUTPUT); 
+  pinMode(torPort, OUTPUT);
   digitalWrite(torPort, HIGH);
   pinMode(lichtPort, OUTPUT);
   digitalWrite(lichtPort, HIGH);
@@ -90,7 +90,7 @@ void setup(){
   digitalWrite(powerLEDPort, HIGH);
   
   Wire.begin();
-  Serial.begin(9600); 
+  Serial.begin(9600);
   //while (!Serial) {
   //  ; // wait for serial port to connect. Needed for Leonardo only sometimes
   //}
@@ -100,16 +100,17 @@ void setup(){
   Serial.println(Ethernet.localIP());
 }
 
-void loop(){
+void loop()
+{
   getDate();
   printDate(); //serial auf Konsole
   timeEvents();
-  statusUmsetzenTor(); 
+  statusUmsetzenTor();
   statusUmsetzenLicht();
   tasterEvents();
-  
+
 //========WEBSERVER================================================================
-  // Create a client connection 
+  // Create a client connection
   EthernetClient client = server.available();
   if (client) {
     boolean did = false;
@@ -125,7 +126,9 @@ c = client.read();
 
         if(reading && c == ' ') reading = false;
         if(c == '?') reading = true; //found the ?, begin reading the info
-if(reading){
+
+if(reading)
+{
   switch (c) {
             case 'h':
               if(did == false){
